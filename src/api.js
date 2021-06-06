@@ -31,6 +31,7 @@ export async function init () {
         app.use("/robots.txt", (_, res) => res.status(200).set("Content-Type", "text/plain").send(
             'User-agent: *\nDisallow: /'
         ));
+        app.use("/health-check", (_, res) => res.status(200).end());
 
         enableDefaultProxy(app);
 
