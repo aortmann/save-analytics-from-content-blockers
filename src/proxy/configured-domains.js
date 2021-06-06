@@ -12,10 +12,10 @@ const proxies = new Map(Array.from(domains).map((domain) => {
 
 export function enableDefaultProxy (expressApp) {
     expressApp.use("/", (req, res, next) => {
-        if (!req.headers || !req.headers.host || !config.hostsWhitelistRegex.test(req.headers.host)) {
-            info(`FORBIDDEN: proxy request from host "${req.headers.host}" was canceled as it doesn't match with ${config.hostsWhitelistRegex}.`);
+        if (!req.headers || !req.headers['x-original-host'] || !config.hostsWhitelistRegex.test(req.headers['x-original-host'])) {
+            info(`FORBIDDEN: proxy request from host "${req.headers['x-original-host']}" was canceled as it doesn't match with ${config.hostsWhitelistRegex}.`);
             return res.status(403).send({
-                error: `Requests from host ${req.headers.host} are restricted.`
+                error: `Requests from host ${req.headers['x-original-host']} are restricted.`
             });
         }
         const domain = unmask(req.url.split(/\//g)[1]);
