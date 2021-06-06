@@ -38,7 +38,7 @@ export function createDefaultProxy (targetDomain, proxyOptionsOverride = {}) {
                 : proxyRequest;
         },
         userResHeaderDecorator: (proxyHeaders, origninalHeaders) => {
-            const { headers: { host } } = origninalHeaders;
+            const host = origninalHeaders.headers['x-original-host'];
             if (proxyHeaders.location) {
                 if (config.proxy.specialContentReplace[servername]) { // Keep before other replacements
                     const replacements = config.proxy.specialContentReplace[servername];
@@ -52,7 +52,8 @@ export function createDefaultProxy (targetDomain, proxyOptionsOverride = {}) {
             }
             return proxyHeaders;
         },
-        userResDecorator: (_, proxyResData, { headers: { host } }) => {
+        userResDecorator: (_, proxyResData, origninalHeaders) => {
+            const host = origninalHeaders.headers['x-original-host'];
             if (_.req.res && _.req.res.client && _.req.res.client.servername) {
                 servername = _.req.res.client.servername;
             }
